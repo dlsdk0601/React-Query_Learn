@@ -1,5 +1,5 @@
-import { useState } from "react";
-import {useQuery} from "react-query";
+import {useEffect, useState} from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { PostDetail } from "./PostDetail";
 const maxPostPage = 10;
 
@@ -14,11 +14,21 @@ export function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
 
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if(currentPage < maxPostPage){
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery(["posts", nextPage], () => fetchPosts(nextPage));
+    }
+  }, [currentPage, queryClient])
+
   const { data, isLoading, isError, error } = useQuery(
     ["posts", currentPage],
     () => fetchPosts(currentPage),
     {
-    staleTime: 2000 // 2초마다 데이터가 만료되도록 설정, default는 0초 데이터를 계속 최신으로 유지하기 위
+    staleTime: 2000, // 2초마다 데이터가 만료되도록 설정, default는 0초 데이터를 계속 최신으로 유지하기 위
+      keepPreviousData: true
   });
   // isFetching
   // => 비동기 쿼리가 해결되지 않았음
