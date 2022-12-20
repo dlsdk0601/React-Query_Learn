@@ -1,7 +1,6 @@
-import { Posts } from "./page/post/Posts";
-import "./App.css";
 import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import PostMain from "./page/post/PostMain";
+import Infinite from "./page/infinite/Infinite";
 
 function App() {
   return (
@@ -15,6 +14,7 @@ function App() {
       </header>
         <Routes>
           <Route path={"/"} element={<PostMain />} />
+          <Route path={"/star-wars"} element={<Infinite />} />
         </Routes>
       </BrowserRouter>
     </>
