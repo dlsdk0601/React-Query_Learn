@@ -10,11 +10,13 @@ const fetchUrl = async (url) => {
 
 export function InfinitePeople() {
 
+  // fetchNextPage => 다음 페이지 데이터를 부르는 함수
+  // hasNextPage => isNext
   const { data, fetchNextPage, hasNextPage, isLoading, isError, error, isFetching } = useInfiniteQuery(
     "sw-people",
-    ({ pagesParam = initialUrl }) => fetchUrl(pagesParam),
+    ({ pagesParam = initialUrl }) => fetchUrl(pagesParam), // 전 페이지 pagesParam을 받아와서 넘긴다. 때문에 초기값 설정 필요
     {
-      getNextPageParam: (lastPage) => lastPage.next || undefined
+      getNextPageParam: (lastPage) => lastPage.next || undefined // 다음 api를 요청 할 때 사용될 pageParam값을 정하는 옵션
     }
   );
 
@@ -32,6 +34,7 @@ export function InfinitePeople() {
 
   return (
     <>
+      {/* 스크롤 내려서 중간에 보이는 로딩때문에 필요. 초기 로딩 x */}
       {isFetching && <div className="loading">Loading...</div>}
       <InfiniteScroll
       loadMore={fetchNextPage}
