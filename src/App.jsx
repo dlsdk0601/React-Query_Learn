@@ -1,19 +1,23 @@
-import {QueryClientProvider, QueryClient} from "react-query";
-import { ReactQueryDevtools} from "react-query/devtools";
-import { Posts } from "./Posts";
+import { Posts } from "./page/post/Posts";
 import "./App.css";
-
-const queryClient = new QueryClient();
+import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
+import PostMain from "./page/post/PostMain";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="App">
-        <h1>Blog Posts</h1>
-        <Posts />
-      </div>
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+    <>
+      <BrowserRouter>
+      <header className="header">
+        <ul>
+          <li><Link to={"/"}>Posts</Link></li>
+          <li><Link to={"/star-wars"}>Star was</Link></li>
+        </ul>
+      </header>
+        <Routes>
+          <Route path={"/"} element={<PostMain />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
