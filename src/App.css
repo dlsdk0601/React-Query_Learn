@@ -15,3 +15,20 @@ div.pages {
   justify-content: space-between;
   width: 100%;
 }
+
+.header ul{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header ul > li {
+  width: 150px;
+  list-style: none;
+}
+
+.header ul > li > a{
+  color: black;
+  text-decoration: none;
+}
