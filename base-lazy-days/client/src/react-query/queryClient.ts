@@ -1,17 +1,24 @@
+import { createStandaloneToast } from '@chakra-ui/react';
 import { QueryClient } from 'react-query';
-// import { createStandaloneToast } from '@chakra-ui/react';
-// import { theme } from '../theme';
 
-// const toast = createStandaloneToast({ theme });
+import { theme } from '../theme';
 
-// function queryErrorHandler(error: unknown): void {
-//   // error is type unknown because in js, anything can be an error (e.g. throw(5))
-//   const title =
-//     error instanceof Error ? error.message : 'error connecting to server';
+const toast = createStandaloneToast({ theme });
 
-//   // prevent duplicate toasts
-//   toast.closeAll();
-//   toast({ title, status: 'error', variant: 'subtle', isClosable: true });
-// }
+function queryErrorHandler(error: unknown): void {
+  // error is type unknown because in js, anything can be an error (e.g. throw(5))
+  const title =
+    error instanceof Error ? error.message : 'error connecting to server';
 
-export const queryClient = new QueryClient();
+  // prevent duplicate toasts
+  toast.closeAll();
+  toast({ title, status: 'error', variant: 'subtle', isClosable: true });
+}
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      onError: queryErrorHandler,
+    },
+  },
+});
