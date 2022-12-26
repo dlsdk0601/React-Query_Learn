@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { ReactElement } from 'react';
-import { Redirect } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
 import { usePatchUser } from './hooks/usePatchUser';
 import { useUser } from './hooks/useUser';
@@ -22,7 +22,8 @@ export function UserProfile(): ReactElement {
   const patchUser = usePatchUser();
 
   if (!user) {
-    return <Redirect to="/signin" />;
+    redirect('/signin');
+    return <></>;
   }
 
   const formElements = ['name', 'address', 'phone'];

@@ -11,7 +11,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
 import { useAuth } from '../../auth/useAuth';
 import { useUser } from './hooks/useUser';
@@ -25,7 +25,8 @@ export function Signin(): ReactElement {
   const { user } = useUser();
 
   if (user) {
-    return <Redirect to={`/user/${user.id}`} />;
+    redirect(`/user/${user.id}`);
+    return <></>;
   }
 
   return (

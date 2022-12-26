@@ -1,7 +1,7 @@
 import { Box, Button, Flex, HStack, Icon, Link } from '@chakra-ui/react';
 import { ReactElement, ReactNode } from 'react';
 import { GiFlowerPot } from 'react-icons/gi';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../auth/useAuth';
 import { useUser } from '../user/hooks/useUser';
@@ -28,7 +28,7 @@ const NavLink = ({ to, children }: { to: string; children: ReactNode }) => (
 export function Navbar(): ReactElement {
   const { user } = useUser();
   const { signout } = useAuth();
-  const history = useHistory();
+  const history = useNavigate();
 
   return (
     <Box bg="gray.900" px={4}>
@@ -52,7 +52,7 @@ export function Navbar(): ReactElement {
               <Button onClick={() => signout()}>Sign out</Button>
             </>
           ) : (
-            <Button onClick={() => history.push('signin')}>Sign in</Button>
+            <Button onClick={() => history('/signin')}>Sign in</Button>
           )}
         </HStack>
       </Flex>
