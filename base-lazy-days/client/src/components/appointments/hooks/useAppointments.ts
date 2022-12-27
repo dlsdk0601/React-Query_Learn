@@ -16,6 +16,11 @@ import { AppointmentDateMap } from '../types';
 import { getAvailableAppointments } from '../utils';
 import { getMonthYearDetails, getNewMonthYear, MonthYear } from './monthYear';
 
+const commonOptions = {
+  staleTime: 0,
+  cacheTime: 300000,
+};
+
 // for useQuery call
 async function getAppointments(
   year: string,
@@ -84,6 +89,7 @@ export function useAppointments(): UseAppointments {
     queryClient.prefetchQuery(
       [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
       () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+      commonOptions,
     );
   }, [queryClient, monthYear]);
   // Notes:
@@ -99,6 +105,12 @@ export function useAppointments(): UseAppointments {
     {
       keepPreviousData: true, // 쿼리키가 변경 될때까지 이전 데이터 유지
       select: showAll ? undefined : selecFn, // filtering 함수라고 생각하면된다. data를 반환하기전에 여기를 한번 걸치고 반환
+      // :::::::::::::::::::::::::::
+      // 여기 hook은 예약 정보에 관한것인데, 이런 데이터는 유저와 상관없이 실시간으로 데이터가 업데이트 되야함.
+      ...commonOptions,
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
     },
   );
 
