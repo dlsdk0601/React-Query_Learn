@@ -1,6 +1,12 @@
 // @ts-nocheck
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { axiosInstance } from '../../../axiosInstance';
@@ -61,6 +67,12 @@ export function useAppointments(): UseAppointments {
   const { user } = useUser();
 
   /** ****************** END 2: filter appointments  ******************** */
+  const selecFn = useCallback((data) => getAvailableAppointments(data, user), [
+    user,
+  ]);
+  // 해당 함수는 select가 실행될때 마다 재정의하기 위해 useCallback으로 감싼다.
+  // 즉 최적화를 위해, data의 변경 사황이 없다면 실행 하지 않는다.(selectFn의 데이터는 user)
+
   /** ****************** START 3: useQuery  ***************************** */
   // useQuery call for appointments for the current monthYear
 
@@ -86,6 +98,7 @@ export function useAppointments(): UseAppointments {
     () => getAppointments(monthYear.year, monthYear.month),
     {
       keepPreviousData: true, // 쿼리키가 변경 될때까지 이전 데이터 유지
+      select: showAll ? undefined : selecFn, // filtering 함수라고 생각하면된다. data를 반환하기전에 여기를 한번 걸치고 반환
     },
   );
 
