@@ -35,6 +35,8 @@ export function useUser(): UseUser {
 
   // TODO: call useQuery to update user data from server
   const { data: user } = useQuery(queryKeys.user, () => getUser(user), {
+    initialData: getStoredUser, // 쿼리키에 해당 함수의 return 값을 초기데이터로 넣는다.
+    // 즉 user 데이터가 localStorage에 잇으면, 해당 데이터를 캐시에 저장시켜 서버통신해서 가져온 데이터처럼 보이게한다.
     onSuccess: (received: User | null) => {
       // 쿼리 함수가 성공적으로 실행됐을때 실행되는 함수, data를 파라미터로 받는다.
       if (!received) {
