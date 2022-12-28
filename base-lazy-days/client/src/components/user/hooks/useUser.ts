@@ -34,7 +34,16 @@ export function useUser(): UseUser {
   const queryClient = useQueryClient();
 
   // TODO: call useQuery to update user data from server
-  const { data: user } = useQuery(queryKeys.user, () => getUser(user));
+  const { data: user } = useQuery(queryKeys.user, () => getUser(user), {
+    onSuccess: (received: User | null) => {
+      // 쿼리 함수가 성공적으로 실행됐을때 실행되는 함수, data를 파라미터로 받는다.
+      if (!received) {
+        clearStoredUser();
+      } else {
+        setStoredUser(received);
+      }
+    },
+  });
   // 왼쪽 user와 오른쪽 user는 같은 변수이다. 기존의 user를 대입해서 새로운 userData를 불러오는것.
 
   // meant to be called from useAuth
