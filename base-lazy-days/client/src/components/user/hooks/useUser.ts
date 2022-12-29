@@ -61,6 +61,13 @@ export function useUser(): UseUser {
     // TODO: reset user to null in query cache
     queryClient.setQueryData(queryKeys.user, null);
     // 해당 키 값에 해당하는 데이터를 null로 저장시킨다.
+    // 여기서 removeQueries를 사용하지 않은 이유는,
+    // setQueryData는 onSuccess를 발생시킨다.
+    // 때문에 localStorage의 데이터 유뮤 상태로 데이터가 유입된다.
+    // 하지만, removeQueries 다음에는 onSuccess가 실행되지 않는다.
+    // 그래서 user의 데이터는 setQueryData로 처리하는게 더 효율적임
+
+    queryClient.removeQueries('user-appointments');
   }
 
   return { user, updateUser, clearUser };
