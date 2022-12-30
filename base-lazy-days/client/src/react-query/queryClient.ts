@@ -24,7 +24,10 @@ export const queryClient = new QueryClient({
       refetchOnMount: false, // 데이터가 stale 상태일 경우 마운트 될때마다 refetch를 실행하는 옵션,
       refetchOnWindowFocus: false, // 데이터가 stale 상태일 경우, 윈도우 포커싱될때마다 refetch하는 옵션
       refetchOnReconnect: false, // 데이터가 stale 상태일 경우, 재 연결이 될때 refetch하는 옵션
+      // 사실 위와 같은 option은 좋지 않다. 유저가 제대로 된 데이터를 접하지 못할 수도 있기 떄문에
     },
-    // 사실 위와 같은 option은 좋지 않다. 유저가 제대로 된 데이터를 접하지 못할 수도 있기 떄문에
+    mutations: {
+      onError: queryErrorHandler,
+    },
   },
 });
