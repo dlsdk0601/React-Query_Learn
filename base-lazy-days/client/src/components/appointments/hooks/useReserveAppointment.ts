@@ -41,7 +41,8 @@ export function useReserveAppointment(): UseMutateFunction<
     {
       onSuccess: () => {
         // 쿼리 데이터 무효화 내장 함수
-        // queryKeys.appointment로 시작하는 쿼리키와 관련된 모든 데이터 무효화
+        // queryKeys.appointment로 시작하는 쿼리키(preFix)와 관련된 모든 데이터 무효화
+        // 쿼리키 배열에 queryKeys.appointments가 포함된 모든 쿼리 데이터는 무효화
         // 정확하게는 쿼리가 오래된것이라고 알리는 내장함수이고, react-query는 리패칭 해온다.
         queryClient.invalidateQueries([queryKeys.appointments]);
         toast({

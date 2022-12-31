@@ -67,7 +67,7 @@ export function useUser(): UseUser {
     // 하지만, removeQueries 다음에는 onSuccess가 실행되지 않는다.
     // 그래서 user의 데이터는 setQueryData로 처리하는게 더 효율적임
 
-    queryClient.removeQueries('user-appointments');
+    queryClient.removeQueries([queryKeys.appointments, queryKeys.user]);
   }
 
   return { user, updateUser, clearUser };
