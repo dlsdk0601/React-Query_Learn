@@ -10,13 +10,17 @@ import {
   setStoredUser,
 } from '../../../user-storage';
 
-async function getUser(user: User | null): Promise<User | null> {
+async function getUser(
+  user: User | null,
+  signal: AbortSignal,
+): Promise<User | null> {
   if (!user) return null;
 
   const { data }: AxiosResponse<{ user: User }> = await axiosInstance.get(
     `/user/${user.id}`,
     {
       headers: getJWTHeader(user),
+      signal,
     },
   );
   return data.user;
@@ -34,19 +38,23 @@ export function useUser(): UseUser {
   const queryClient = useQueryClient();
 
   // TODO: call useQuery to update user data from server
-  const { data: user } = useQuery(queryKeys.user, () => getUser(user), {
-    initialData: getStoredUser, // 쿼리키에 해당 함수의 return 값을 초기데이터로 넣는다.
-    // 즉 user 데이터가 localStorage에 잇으면, 해당 데이터를 캐시에 저장시켜 서버통신해서 가져온 데이터처럼 보이게한다.
-    // :::: 비추인게, userData를 sessionStorage에라도 넣어야하는데, 데이터를 storage에 넣는건 비추.
-    onSuccess: (received: User | null) => {
-      // 쿼리 함수가 성공적으로 실행됐을때 실행되는 함수, data를 파라미터로 받는다.
-      if (!received) {
-        clearStoredUser();
-      } else {
-        setStoredUser(received);
-      }
+  const { data: user } = useQuery(
+    queryKeys.user,
+    ({ signal }) => getUser(user, signal),
+    {
+      initialData: getStoredUser, // 쿼리키에 해당 함수의 return 값을 초기데이터로 넣는다.
+      // 즉 user 데이터가 localStorage에 잇으면, 해당 데이터를 캐시에 저장시켜 서버통신해서 가져온 데이터처럼 보이게한다.
+      // :::: 비추인게, userData를 sessionStorage에라도 넣어야하는데, 데이터를 storage에 넣는건 비추.
+      onSuccess: (received: User | null) => {
+        // 쿼리 함수가 성공적으로 실행됐을때 실행되는 함수, data를 파라미터로 받는다.
+        if (!received) {
+          clearStoredUser();
+        } else {
+          setStoredUser(received);
+        }
+      },
     },
-  });
+  );
   // 왼쪽 user와 오른쪽 user는 같은 변수이다. 기존의 user를 대입해서 새로운 userData를 불러오는것.
 
   // meant to be called from useAuth
