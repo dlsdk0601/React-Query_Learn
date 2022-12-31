@@ -31,20 +31,20 @@ export function Appointment({
   const [textColor, bgColor] = getAppointmentColor(appointmentData, user?.id);
 
   const clickable = isClickable(user, appointmentData);
-  let onAppointmentClick: undefined | (() => void);
   let hoverCss = {};
 
-  // turn the lozenge into a button if it's clickable
-  if (clickable) {
-    onAppointmentClick = user
-      ? () => reserveAppointment(appointmentData)
-      : undefined;
+  const onAppointmentClick = (): void => {
+    if (!clickable || !user) {
+      return;
+    }
+
+    reserveAppointment(appointmentData);
     hoverCss = {
       transform: 'translateY(-1px)',
       boxShadow: 'md',
       cursor: 'pointer',
     };
-  }
+  };
 
   const appointmentHour = dayjs(appointmentData.dateTime).format('h a');
   return (
