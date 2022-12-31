@@ -1,4 +1,4 @@
-import { UseMutateFunction, useMutation } from 'react-query';
+import { UseMutateFunction, useMutation, useQueryClient } from 'react-query';
 
 import { Appointment } from '../../../../../shared/types';
 import { axiosInstance } from '../../../axiosInstance';
@@ -34,9 +34,22 @@ export function useReserveAppointment(): UseMutateFunction<
 > {
   const { user } = useUser();
   const toast = useCustomToast();
+  const queryClient = useQueryClient();
 
-  const { mutate } = useMutation((appointment: Appointment) =>
-    setAppointmentUser(appointment, user?.id),
+  const { mutate } = useMutation(
+    (appointment: Appointment) => setAppointmentUser(appointment, user?.id),
+    {
+      onSuccess: () => {
+        // 쿼리 데이터 무효화 내장 함수
+        // queryKeys.appointment로 시작하는 쿼리키와 관련된 모든 데이터 무효화
+        // 정확하게는 쿼리가 오래된것이라고 알리는 내장함수이고, react-query는 리패칭 해온다.
+        queryClient.invalidateQueries([queryKeys.appointments]);
+        toast({
+          title: 'You have reserved the appointment!',
+          status: 'success',
+        });
+      },
+    },
   );
 
   // TODO: replace with mutate function
