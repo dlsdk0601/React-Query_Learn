@@ -35,9 +35,10 @@ export function renderWithQueryClient(
   );
 }
 
-// export const createQueryClientWrapper = (): React.FC => {
-//   const queryClient = generateQueryClient();
-//   return ({ children }) => (
-//     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-//   );
-// };
+// custom Hook 테스트용
+export const createQueryClientWrapper = (): React.FC => {
+  const queryClient = generateTestQueryClient();
+  return ({ children }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
