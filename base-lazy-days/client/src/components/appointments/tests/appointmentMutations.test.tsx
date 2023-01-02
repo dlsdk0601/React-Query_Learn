@@ -45,9 +45,26 @@ test('Reserve appointment', async () => {
 });
 
 test('Cancel appointment', async () => {
-  // your test here
-  //
-  // const cancelButtons = await screen.findAllByRole('button', {
-  //   name: /cancel appointment/i,
-  //  });
+  renderWithQueryClient(
+    <MemoryRouter>
+      <Calendar />
+    </MemoryRouter>,
+  );
+
+  const cancelButtons = await screen.findAllByRole('button', {
+    name: /cancel appointment/i,
+  });
+
+  // 첫 번째 취소 버튼 클릭
+  // fireEvent로 클릭하는 이유는, 원래 클릭하면 데이터 변화가 일어나야하는 버튼이라서 fireEvent로 클릭
+  fireEvent.click(cancelButtons[0]);
+
+  const alertToast = await screen.findByRole('alert');
+  expect(alertToast).toHaveTextContent('cancel');
+
+  const alertCloseButton = screen.getByRole('button', { name: 'Close' });
+
+  // 모달창 닫는 버튼 클릭
+  alertCloseButton.click();
+  await waitForElementToBeRemoved(alertToast);
 });
